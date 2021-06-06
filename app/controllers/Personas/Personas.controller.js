@@ -13,8 +13,8 @@ const getPersonas = async (req, res) => {
 };
 
 const getPersona = async (req, res) => {
-    let persona = req.body;
-    let sql = `select * from Personas where id_persona = ${persona.id_persona}`;
+    let id = req.params.id;
+    let sql = `select * from Personas where id_persona = ${id}`;
     try {
         let result = await _pg.executeSql(sql);
         return res.send(result.rows);
@@ -40,15 +40,16 @@ const createPersona = async (req, res) => {
 };
 
 const updatePersona = async (req, res) => {
+    let id = req.params.id;
     let persona = req.body;
-    let sql = `select * from Personas where id_persona = ${persona.id_persona}`;
+    let sql = `select * from Personas where id_persona = ${id}`;
     let result = await _pg.executeSql(sql);
     if (result.rowCount != 1) {
         return res.send("El usuario no existe");
     } else {
         let sqlUpdate = `update Personas set nombre='${persona.nombre}', apellidos = '${persona.apellidos}',
         id_tipo = ${persona.id_tipo}, identificacion = '${persona.identificacion}', correo = '${persona.correo}',
-         password = '${persona.password}', celular = '${persona.celular}' where id_persona = ${persona.id_persona};
+         celular = '${persona.celular}' where id_persona = ${id};
         `;
         try {
             let resultUpdate = await _pg.executeSql(sqlUpdate);
@@ -61,13 +62,14 @@ const updatePersona = async (req, res) => {
 };
 
 const deletePersona = async (req, res) => {
+    let id = req.params.id;
     let persona = req.body;
-    let sql = `select * from Personas where id_persona = ${persona.id_persona}`;
+    let sql = `select * from Personas where id_persona = ${id}`;
     let result = await _pg.executeSql(sql);
     if (result.rowCount != 1) {
         return res.send("El usuario no existe");
     } else {
-        let sqlDelete = `delete from Personas where id_persona = ${persona.id_persona}`;
+        let sqlDelete = `delete from Personas where id_persona = ${id}`;
         try {
             let resultDelete = await _pg.executeSql(sqlDelete);
             return res.send({ ok: true, message: "Usuario eliminado", content: resultDelete.rows, });
