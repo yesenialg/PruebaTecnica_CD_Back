@@ -35,9 +35,8 @@ const createPersona = async (req, res) => {
         let persona = req.body;
         let sql = `insert into Personas (nombre, apellidos, id_tipo, identificacion, correo, 
             password, celular, id_rol) values('${persona.nombres}', '${persona.apellidos}', 
-            ${persona.tipoId}, '${persona.numeroId}', '${persona.correo}', '${persona.password}', 
+            ${persona.tipoId}, '${persona.numeroId}', '${persona.correo}', md5('${persona.password}'), 
             '${persona.celular}', ${persona.rol})`;
-            console.log(sql);
         let result = await _pg.executeSql(sql);
         return res.send({ ok: result.rowCount == 1, message: result == 1 ? "El usuario no fue creado" : "Usuario creado", content: persona, });
     } catch (error) {
@@ -56,7 +55,7 @@ const updatePersona = async (req, res) => {
     } else {
         let sqlUpdate = `update Personas set nombre='${persona.nombres}', apellidos = '${persona.apellidos}',
         id_tipo = ${persona.id_tipo}, identificacion = '${persona.numeroid}', correo = '${persona.correo}',
-         celular = '${persona.celular}', password = '${persona.password}', id_rol = ${persona.rol} where id_persona = ${id};
+         celular = '${persona.celular}',id_rol = ${persona.rol} where id_persona = ${id};
         `;
         try {
             let resultUpdate = await _pg.executeSql(sqlUpdate);

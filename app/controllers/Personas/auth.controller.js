@@ -5,10 +5,12 @@ const _jwt = require('../../services/jwt.service')
 const getPersonaLogin = async (req, res) => {
     let persona = req.body;
     let sql = `select nombre, apellidos, id_tipo, identificacion, celular, id_rol from Personas where correo = '${persona.correo}' 
-    and password = '${persona.password}' and id_rol = '${persona.rol}' limit 1`;
+    and password = md5('${persona.password}') and id_rol = ${persona.rol}`;
     try {
+        console.log(sql);
         let result = await _pg.executeSql(sql);
         let logged = result.rows[0];
+        console.log(logged);
         let token = logged ? _jwt.sign(logged) : null;
         return res.send({
             ok: logged ? true : false,
