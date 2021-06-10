@@ -5,7 +5,7 @@ const _jwt = require('../../services/jwt.service')
 const getPersonaLogin = async (req, res) => {
     let persona = req.body;
     let sql = `select nombre, apellidos, id_tipo, identificacion, celular, id_rol from Personas where correo = '${persona.correo}' 
-    and password = '${persona.password}' limit 1`;
+    and password = '${persona.password}' and id_rol = '${persona.rol}' limit 1`;
     try {
         let result = await _pg.executeSql(sql);
         let logged = result.rows[0];
@@ -13,7 +13,7 @@ const getPersonaLogin = async (req, res) => {
         return res.send({
             ok: logged ? true : false,
             message: logged ? 'Bienvenido' : 'Verificar informacion',
-            content: token,
+            content: {token, rol: logged.id_rol},
         });
     } catch (error) {
         console.log(error);
@@ -48,7 +48,6 @@ const verifyTokenMiddleWare = (req, res, next) => {
         return res.send({
             ok: false,
             message: "El token no se pudo verificar",
-            content: persona
         });
     }
 }

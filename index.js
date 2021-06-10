@@ -1,12 +1,15 @@
 /**Archivo principad de la api */
 
 const express = require('express');
-const app = express();
+const cors = require('cors');
+
+const app = express()
 const router = require('./app/routers/index');
 
 const port = 3001;
 
 app.use(express.json());
+app.use(cors());
 app.use('/', router);
 
 app.listen(port, () => {
